@@ -24,4 +24,4 @@ Inside your latex document
 
 slprocess image needs 5 binary parameters. Each one control the activation (1) or deactivation (0) of one step. By default (with no parameters), all sections are active. 
 
-
+![supervised learning process in Tikz](slprocess.png)
