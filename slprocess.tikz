@@ -1,0 +1,257 @@
+% Supervised learning process in Tikz
+% Version 0.1
+% Author : Julien Laumonier <julien.laumonier@ift.ulaval.ca>
+
+\usepackage{ifthen}
+\usetikzlibrary{arrows.meta}
+
+\tikzset{%
+	hexagon/.style ={draw,minimum size=1.9cm,regular polygon,regular polygon sides=6}
+	}
+
+\tikzset{pics/screen/.style={
+         code={
+         	\draw (-0.75,-0.5) rectangle ++(1.5,1);
+         	\draw [rounded corners=0.5mm] (-0.85,-0.6) rectangle ++(1.7,1.2);
+         	\draw (-0.05,-0.6) -- ++(0, -0.1) -- ++(-0.32, 0) -- ++(0, -0.1) -- ++(0.75, 0) -- ++(0, 0.1) -- ++(-0.32, 0) -- ++(0, 0.1);
+     	}
+     }
+ }
+
+\tikzset{pics/xmldata/.style args={#1}{
+		code={
+			\draw [fill=#1](-0.5,-0.25) rectangle ++(1, 0.5);
+			\filldraw (-0.5,0.25) rectangle ++(1, 0.1);
+			\draw (-0.35, 0) -- +(45:0.15);
+			\draw (-0.35, 0) -- +(-45:0.15); 
+			\draw (-0.07, -0.12) -- +(60:0.25);
+			\draw (0.35, 0) -- +(135:0.15);
+			\draw (0.35, 0) -- +(-135:0.15);
+		}
+	}
+}
+
+\tikzset{pics/dialogdata/.style args={#1}{
+		code={
+			\draw [fill=#1] (0, 0) arc(315:10:0.75cm and 0.5cm) -- +(0, -0.5cm) -- (0,0);
+			\draw (-1, 0.15) -- +(0.9, 0);
+			\draw (-1, 0.35) -- +(0.9, 0);
+			\draw (-1, 0.55) -- +(0.9, 0);
+		}
+	}
+}
+
+\tikzset{pics/imagedata/.style args={#1}{
+		code={
+			\draw [fill=#1] (-0.25, -0.375) rectangle +(0.5, 0.6);
+			\draw [fill=#1] (-0.2, -0.275) rectangle +(0.4, 0.45);
+			\draw (-0.2, -0.275) -- ++(45:0.2cm) -- ++(-45:0.2cm) -- (0.2, 0);
+			\draw (0,0) circle (0.08cm);
+		}
+	}
+}
+
+\tikzset{pics/filedata/.style args={#1}{
+		code={
+			\draw [fill=#1] (-0.125, -0.5) rectangle +(0.5, 0.55);
+			\draw (-0.075, -0.425) -- +(0.4, 0);
+			\draw (-0.075, -0.325) -- +(0.4, 0);
+			\draw (-0.075, -0.225) -- +(0.4, 0);
+			\draw (-0.075, -0.125) -- +(0.4, 0);
+			\draw (-0.075, -0.025) -- +(0.4, 0);
+			\draw [fill=#1] (-0.25, -0.375) rectangle +(0.5, 0.55);
+			\draw (-0.2, -0.3) -- +(0.4, 0);
+			\draw (-0.2, -0.2) -- +(0.4, 0);
+			\draw (-0.2, -0.1) -- +(0.4, 0);
+			\draw (-0.2, -0.0) -- +(0.4, 0);
+			\draw (-0.2, 0.1) -- +(0.4, 0);
+			
+		}
+	}
+}
+
+%adapted from https://tex.stackexchange.com/questions/147389/symbols-of-pencil-ruler-and-compass. Thanks user11232 !
+\tikzset{pics/pen/.style args={#1}{
+		code={
+			\fill (0,2) -- (0.4,2) -- (0.4,0) --(0.3,-0.15) -- (0.2,0) -- (0.1,-0.14) -- (0,0) -- cycle;
+			\draw[#1, thick] (0.2,2) -- (0.2,0);
+			\fill[#1] (0,1.5) -- (0.2,1.47) -- (0.4,1.5) -- (0.4,2) arc(30:150:0.23cm);
+			\draw (0,1.5) -- (0.2,1.47) -- (0.4,1.5) -- (0.4,2) arc(30:150:0.23cm);
+			\draw (0,0) -- (0.2,-0.8)node[coordinate,pos=0.75](a){} -- (0.4,0)node[coordinate,pos=0.25](b){} -- (0.3,-0.15) -- (0.2,0) -- (0.1,-0.14) -- cycle;
+			\fill[#1] (0,0) -- (0.2,-0.8)node[coordinate,pos=0.75](a){} -- (0.4,0)node[coordinate,pos=0.25](b){} -- (0.3,-0.15) -- (0.2,0) -- (0.1,-0.14) -- cycle;
+			\fill (a) -- (0.2,-0.8) -- (b) -- cycle;
+		}
+	}
+}
+
+\tikzset{pics/manipulatedata/.style args={#1}{
+		code={
+			\fill [#1] (-0.175, -0.55) rectangle +(0.6, 0.65);
+			\draw [fill=#1] (-0.125, -0.5) rectangle +(0.5, 0.55);
+			\draw [fill=#1] (-0.075, -0.025) rectangle +(0.4, -0.05);
+			\draw [fill=#1] (-0.075, -0.1) rectangle +(0.4, -0.15);
+			\draw [fill=#1] (-0.075, -0.275) rectangle +(0.19, -0.15);
+			\draw [fill] (0.135, -0.275) rectangle +(0.19, -0.15);
+			\pic [xshift=0.25cm, yshift=-0.3cm, rotate=225, scale=0.1]{{pen}={#1}};
+		}
+	}
+}
+
+\newcommand{\gearmacro}[5]{%
+	\foreach \i in {1,...,#1} {%
+		[rotate=(\i-1)*360/#1]  (0:#2)  arc (0:#4:#2) {[rounded corners=0.5pt]
+			-- (#4+#5:#3)  arc (#4+#5:360/#1-#5:#3)} --  (360/#1:#2)
+}}  
+
+\tikzset{pics/gear/.style args={#1}{
+		code={
+			\fill (0,0) circle (2cm);
+			\fill[rotate=12] \gearmacro{8}{2}{2.4}{20}{2};
+			\draw[fill=#1] (0cm,0cm) circle(1.35cm);
+		}
+	}
+}
+
+\tikzset{pics/magnifing/.style args={#1}{
+		code={
+			\draw [fill=#1] (0.35, -0.4) circle (0.15);
+			\fill (0.34, -0.55) rectangle +(0.05, -0.2);
+		}
+	}
+}
+
+\tikzset{pics/testing/.style args={#1}{
+		code={
+			\fill [#1] (-0.155, -0.5) rectangle +(0.55, 0.6);
+			\draw [fill=#1] (-0.125, -0.47) rectangle +(0.5, 0.55);
+			\draw [fill=#1] (-0.075, -0.025) rectangle +(0.24, -0.05);
+			\draw [fill=#1] (0.2, 0) rectangle +(0.14, -0.1);
+			\draw (0.22, -0.03) -- ++(-45:0.7mm) -- ++(45:1.3mm);
+			
+			\draw [fill=#1] (-0.075, -0.175) rectangle +(0.24, -0.05);
+			\draw [fill=#1] (0.2, -0.15) rectangle +(0.14, -0.1);
+			\draw (0.22, -0.18) -- ++(-45:0.7mm) -- ++(45:1.3mm);
+			
+			\draw [fill=#1] (-0.075, -0.325) rectangle +(0.24, -0.05);
+			\draw [fill=#1] (0.2, -0.3) rectangle +(0.14, -0.1);
+			\draw (0.22, -0.33) -- ++(-45:0.7mm) -- ++(45:1.3mm);	
+			
+			\pic [scale=0.8, rotate around={30:(0.35, -0.4)}] {{magnifing}={#1}};
+			\draw (0.35, -0.4) -- +(-0.15,0);
+			\draw (0.35, -0.4) -- +(0,0.15);
+		}
+	}
+}
+
+\tikzset{pics/improve/.style args={#1}{
+		code={
+			\fill [#1] (-0.175, -0.55) rectangle +(0.6, 0.65);
+			\draw [fill=#1] (-0.125, -0.5) rectangle +(0.5, 0.55);
+			\draw [fill=#1] (-0.075, -0.025) rectangle +(0.4, -0.05);
+			\draw [fill=#1] (-0.075, -0.15) rectangle +(0.3, -0.05);
+			\fill [#1] (0.3,-0.5) circle (0.25);
+			\draw [-stealth] (0.1,-0.48) arc (180:0:0.2cm);
+			\draw [stealth-] (0.1,-0.51) arc (180:360:0.2cm);
+		}
+	}
+}
+
+\tikzset{pics/image1/.style args={#1}{
+		code={
+			\pic [scale=0.4, xshift=0.1cm, yshift=-0.5cm] {screen};
+			\draw [densely dashed, -stealth] (-0.7,0) arc (180:0:0.7cm) -- ++(-0.3, 0);
+			\pic [scale=0.3, xshift=-2cm] {{xmldata}={#1}};
+			\pic [scale=0.25, xshift=-1.2cm, yshift=1.1cm] {{dialogdata}={#1}};
+			\pic [scale=0.5, yshift=1.3cm] {{imagedata}={#1}};
+			\pic [scale=0.45, xshift=0.9cm, yshift=1cm] {{filedata}={#1}};
+		}
+	}
+}
+
+\tikzset{pics/image2/.style args={#1}{
+		code={
+			\pic [scale=0.5] {screen};
+			\pic [scale=0.4, xshift=-1cm, yshift=0.75cm] {{xmldata}={#1}};
+			%cursor
+			\draw [#1] (-0.52, 0.2) -- ++(0.1, 0);
+			\draw[-{Latex[scale=0.55]}, line width=0.25mm] (-0.5, 0.1) -- (-0.45, 0.25);
+			%manipulate
+			\pic [white, xshift=0.3cm, yshift=0.1cm, scale=0.7] {{manipulatedata}={#1}};
+		}
+	}
+}
+
+\tikzset{pics/image3/.style args={#1}{
+		code={
+			\pic [scale=0.5] {screen};
+			\pic [xshift=0.25cm, yshift=0.3cm, scale=0.08] {{gear}={#1}};
+			\pic [xshift=0.5cm, yshift=0.5cm, scale=0.05] {{gear}={#1}};
+		}
+	}
+}
+
+\tikzset{pics/image4/.style args={#1}{
+		code={
+			\pic [scale=0.5] {screen};
+			\pic [xshift=0.3cm, yshift=0.3cm, scale=0.8]{{testing}={#1}};
+		}
+	}
+}
+
+\tikzset{pics/image5/.style args={#1}{
+		code={
+			\pic [scale=0.5] {screen};
+			\pic [xshift=0.3cm, yshift=0.45cm, scale=0.8]{{improve}={#1}};
+		}
+	}
+}
+
+
+\tikzset{pics/slprocess/.style args={#1 and #2 and #3 and #4 and #5}{
+		code={
+
+			%color
+			\definecolor{c1}{RGB}{31,159,136}
+			\definecolor{c2}{RGB}{135,77,161}
+			\definecolor{c3}{RGB}{227,75,54}
+			\definecolor{c4}{RGB}{244,156,33}
+			\definecolor{c5}{RGB}{92,109,125}
+			
+			\ifthenelse{#1=1}{\colorlet {color1}{c1}}{\colorlet {color1}{c1!20!white}}
+			\ifthenelse{#2=1}{\colorlet {color2}{c2}}{\colorlet {color2}{c2!20!white}}
+			\ifthenelse{#3=1}{\colorlet {color3}{c3}}{\colorlet {color3}{c3!20!white}}
+			\ifthenelse{#4=1}{\colorlet {color4}{c4}}{\colorlet {color4}{c4!20!white}}
+			\ifthenelse{#5=1}{\colorlet {color5}{c5}}{\colorlet {color5}{c5!20!white}}
+			%hexagon
+			\node [hexagon, color1, fill=color1] (a) at (0,0) {};
+			\node [hexagon, color2, fill=color2] (b) at (1.5,-0.866) {};
+			\node [hexagon, color3, fill=color3] (c) at (3,0){};
+			\node [hexagon, color4, fill=color4] (d) at (4.5,-0.866){};
+			\node [hexagon, color5, fill=color5] (e) at (6,0){};
+			%numbers
+			\node [anchor=north, below, color1] at (a.south) {\LARGE 1};
+			\node [anchor=south, above, color2] at (b.north) {\LARGE 2};
+			\node [anchor=north, below, color3] at (c.south) {\LARGE 3};
+			\node [anchor=south, above, color4] at (d.north) {\LARGE 4};
+			\node [anchor=north, below, color5] at (e.south) {\LARGE 5};
+			%text
+			\node  [anchor=south, align=center, color1] (atext) at (0, 0.866) {\scriptsize Collecte des \\ \scriptsize données};
+			\node  [anchor=north, align=center, color2] (btext) at (1.5, -1.732) {\scriptsize Nettoyer, préparer et \\ \scriptsize manipuler les données};
+			\node  [anchor=south, align=center, color3] (ctext) at (c |- atext.south) {\scriptsize Choix et \\ \scriptsize entrainement \\ \scriptsize du modèle};
+			\node  [anchor=north, align=center, color4] (dtext) at (d |- btext.north) {\scriptsize Évaluation du \\ \scriptsize modèle};
+			\node  [anchor=south, align=center, color5] (etext) at (e |- atext.south) {\scriptsize Amélioration};
+			%inside images
+			% img for 1
+			\pic [white, line width=0.2pt, yshift=-0.1cm] at (a) {{image1}={color1}};
+			% img for 2
+			\pic [white, line width=0.2pt] at (b) {{image2}={color2}};
+			% img for 3
+			\pic [white, line width=0.2pt] at (c) {{image3}={color3}};
+			% img for 4
+			\pic [white, line width=0.2pt] at (d) {{image4}={color4}};
+			% img for 5
+			\pic [white, line width=0.2pt] at (e) {{image5}={color5}};
+		}
+	},
+	pics/mlprocess/.default=1 and 1 and 1 and 1 and 1,
+}
