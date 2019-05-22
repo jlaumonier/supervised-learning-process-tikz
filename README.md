@@ -14,9 +14,11 @@ Inside your latex document
 \input{slprocess.tikz}
 
 \begin{document}
+\resizebox{\textwidth}{!}{
   \begin{tikzpicture}
       \pic {{slprocess}={0 and 0 and 1 and 0 and 0}};
   \end{tikzpicture}
+  }
 \end{document}
 ```
 
