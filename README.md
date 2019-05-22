@@ -11,7 +11,7 @@ Inside your latex document
 \usepackage{tikz}
 \usepackage{pgfplots}
 \usetikzlibrary{shapes.geometric}
-\import{slprocess.tikz}
+\input{slprocess.tikz}
 
 \begin{document}
   \begin{tikzpicture}
