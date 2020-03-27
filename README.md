@@ -1,6 +1,6 @@
 # Supervised Learning Process in Tikz
 
-I wanted to use an image which describes the supervised learning process inside a beamer presentation. One of these images can be found here : https://blog.usejournal.com/machine-learning-for-beginners-from-zero-level-8be5b89bf77c. Unfortunately, it was in English and I would have to manipulate it to hide some sections. Moreover, I did not find the creator of this image (which web site is the original ?). Therefore I decided (after a moment of madness) to recreate it in Tikz. And, I thought, I could use it to learn Tikz.
+I wanted to use an image which describes the supervised learning process inside a beamer presentation. One of these images can be found here : https://blog.usejournal.com/machine-learning-for-beginners-from-zero-level-8be5b89bf77c. Unfortunately, it was in English and I would have to manipulate it to hide some sections. This image is inspired by https://cio-wiki.org/wiki/Machine_Learning, Kimberly Cook. Therefore I decided (after a moment of madness) to recreate it in Tikz. And, I thought, I could use it to learn Tikz.
 
 The code is not perfect and the image does not scale well. Maybe I will improve latter. And, note that the texts are in French, but it is easy to change it. Hope you enjoy it !  
 
